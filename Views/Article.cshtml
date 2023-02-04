@@ -1,0 +1,72 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.ArticlePage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models
+@{
+	Layout = "Master.cshtml";
+
+	var grid = Model.Value<BlockGridModel>("pageBlocks");
+	var articleSection = grid[0];
+	var leftGrid = articleSection.Areas.Where(x => x.Alias == "Left").ToList()[0];
+	var pageImage = leftGrid[0].Content.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("image");
+	var partials = articleSection.Areas.Where(x => x.Alias == "Right").ToList()[0];
+
+	var postsButton = Model.Value<Link>("postsButton");
+	var postsCards = Model.Value<IEnumerable<BlockListItem>>("postsCards");
+
+	var leadTitle = Model.Value("leadTitle");
+	var leadSubtitle = Model.Value("leadSubtitle");
+	var leadNote = Model.Value("leadNote");
+	var leadSubjects = Model.Value<string[]>("leadSubjects");
+	var leadImage = Model.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("leadImage");
+
+	<section class="twocol_section page_head">
+		<div class="innerpage">
+			<div class="row">
+				<div class="page_top">
+					<img src="media/images/logo_dark.png" alt="רפאל" class="logo_print" />
+					<a href="#" class="go_back "><span class="icon icon-arrow_right"></span><span class="label">הריון, לידה
+							וגידול ילדים בריאים</span></a>
+					<h1 class="title_section title-1 sm-splittext">@Model.Value("pageTitle")</h1>
+					@Model.Value("jobList")
+					<div class="article_desc title-5">@Model.Value("articleTitle")</div>
+				</div>
+
+				<div class="left_side">
+					<div class="inner">
+						<div class="image sm-global sm-imagereveal parallax" data-smprop='{"type":"class","threshold":0.15}'
+							data-translatey="0.35" data-ease="0.09">
+							<div class="bg parallax-move">
+								<div class="cover" style="background-image:url(@pageImage.MediaUrl());"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="content font_l">
+					@foreach (var item in partials)
+					{
+						var content = item.Content.ContentType.Alias;
+						@await Html.PartialAsync("/Views/Partials/blockgrid/Components/" + content + ".cshtml",item,new ViewDataDictionary(ViewData) {{ "parent", Model}});
+					}
+				</div>
+			</div>
+		</div>
+		<div id="sticky_end"></div>
+	</section>
+
+	<!-- Posts section -->
+	@await Html.PartialAsync("PostsSection", postsCards, new ViewDataDictionary(ViewData) {
+		{ "title" , Model.Value("postsTitle") }, 
+		{ "btnName", postsButton.Name }, 
+		{ "btnUrl", postsButton.Url}})
+	
+
+	<!-- Lead section -->
+	@await Html.PartialAsync("LeadSection", new ViewDataDictionary(ViewData) {
+		{ "image" , leadImage.MediaUrl() }, 
+		{ "title", leadTitle }, 
+		{ "subtitle", leadSubtitle },
+		{ "note", leadNote },
+		{ "subjects", leadSubjects }
+		})
+}

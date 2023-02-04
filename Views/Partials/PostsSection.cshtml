@@ -1,0 +1,32 @@
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@model IEnumerable<BlockListItem>
+<section class="posts_section experts_section" id="posts_section">
+		<div class="innerpage">
+			<div class="row">
+				<h2 class="title_section title-2 sm-global sm-splittext" data-smprop='{"type":"split","threshold":0.02}'>
+					@ViewData["title"]</h2>
+				<div class="carousel sm-global sm-fadein" data-smprop='{"type":"class","threshold":0.1}'>
+					@foreach (var card in Model)
+					{
+						var postImage = card.Content.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("image");
+						<div class="item carousel-cell">
+							<a href="#" class="inner" aria-label="עבור לרופא">
+								<div class="in">
+									<div class="bg">
+										<div class="cover" style="background-image: url(@postImage.MediaUrl());"></div>
+									</div>
+									<div class="bottom">
+										<h3 class="title title-5">@card.Content.Value("title")</h3>
+										<div class="desc" style="font-size: 2px;">@card.Content.Value("description")</div>
+									</div>
+								</div>
+							</a>
+						</div>
+					}
+				</div>
+				<div class="btn_cont sm-global sm-fadein" data-smprop='{"type":"class","threshold":0.1}'><a
+						href="@ViewData["btnUrl"]" class="btn btn_outline"><span>@ViewData["btnName"]</span></a></div>
+			</div>
+		</div>
+	</section>

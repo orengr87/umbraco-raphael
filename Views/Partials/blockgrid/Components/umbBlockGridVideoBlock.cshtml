@@ -1,0 +1,20 @@
+@using Umbraco.Extensions
+@using Umbraco.Cms.Core.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
+@{
+    var coverImage = Model.Content.Value<MediaWithCrops>("vbCoverImage");
+    <div class="video_box mix_video">
+        <a href="javascript:;" class="inner play_video" aria-label="נגן סרטון">
+            @if (coverImage != null)
+            {
+                <div class="bg cover" style="background-image: url(@coverImage.MediaUrl());"></div>
+            }
+            <div class="play_btn"></div>
+            <div class="bottom">
+                <div class="name font_xl">@Model.Content.Value("vbName")</div>
+                <h4 class="title-2">@Model.Content.Value("vbTitle")</h4>
+            </div>
+        </a>
+        <div class="iframe_cont" data-youtube-id="@(Model.Content.Value("vbYoutubeId"))"></div>
+    </div>
+}

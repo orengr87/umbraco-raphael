@@ -1,0 +1,104 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.Blocks
+@{
+    var root = Umbraco.ContentAtRoot().First();
+    var title = root.Value("siteTitle");
+    var siteCopy = root.Value("siteCopy");
+    var headerMenuLinks = root.Value<IEnumerable<BlockGridItem>>("headerMenuLinks");
+    var showAdditionalButtons = root.Value<bool>("showAdditionalButtons");
+
+}
+<header class="header header-light" id="header">
+    <div class="mask"></div>
+    <div class="in">
+        <div class="innerpage">
+            <div class="row">
+
+                <!-- Logo -->
+                <a href="#" title="@title" class="logo"></a>
+
+                <!-- Nav -->
+                @if (headerMenuLinks != null)
+                {
+                    <nav class="nav">
+                        <ul class="menu clear">
+                            @foreach (var item in headerMenuLinks)
+                            {
+                                var subItems = item.Content.Value<IEnumerable<BlockListItem>>("menuSubItems");
+                                var hasItems = (subItems?.Count() ?? 0) > 0;
+                                <li class="li-parent @(hasItems ? "has-subnav": "")">
+                                    <a href="javascript:;">@item.Content.Value("menuItemName")<span class="border"></span></a>
+                                    @if (hasItems)
+                                    {
+                                        <div class="subnav">
+                                            <div class="subnav_in">
+                                                <div class="subnav_er">
+                                                    <ul>
+                                                        @foreach (var subitem in subItems)
+                                                        {
+                                                            var link = subitem.Content.Value("menuItemLink");
+                                                            var name = subitem.Content.Value("menuItemName");
+                                                            var highlight = subitem.Content.Value<bool>("menuItemHighlight");
+                                                            if (highlight)
+                                                            {
+                                                                <li><a href="@link" class="highlight"><span>@name</span></a></li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <li><a href="@link">@name</a></li>
+                                                            }
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </li>
+                            }
+                            @if (showAdditionalButtons)
+                            {
+                                <li class="small-padding small-margin li-parent"><a href="#" class="btn"><span>יצירת
+                                            קשר</span></a></li>
+                                <li class="small-padding li-search li-parent">
+                                    <a href="javascript:;" aria-label="חיפוש" class="toggle-search"><span class="relative"><span
+                                        class="icon icon-search"></span><span class="border"></span></span></a>
+                                    <div class="subnav subnav_search">
+                                        <div class="subnav_in">
+                                            <div class="subnav_er">
+                                                <form class="search-box font_m">
+                                                    <span class="icon icon-search"></span>
+                                                    <input type="text" placeholder="חיפוש כללי" aria-label="הקלד מילת חיפוש" />
+                                                    <button type="submit" class="submit btn_arrow" disabled><span
+                                                    class="icon icon-arrow_left"></span></button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="has-subnav small-padding li-parent">
+                                    <a href="javascript:;" aria-label="בחירת שפה"><span class="icon icon-lang"></span><span
+                                    class="mobile_label">שפה / Language</span><span class="border"></span></a>
+                                    <div class="subnav">
+                                        <div class="subnav_in">
+                                            <div class="subnav_er">
+                                                <ul>
+                                                    <li><a href="#">עברית</a></li>
+                                                    <li><a href="#">English</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+
+                    <!-- Mobile -->
+                    <a href="javascript:;" class="toggleMenu" id="toggleMenu" aria-label="פתח תפריט"><span
+                        class="stroke"><span class="middle"></span></span></a>
+                }
+
+            </div>
+        </div>
+    </div>
+</header>

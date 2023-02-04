@@ -1,0 +1,118 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using Umbraco.Cms.Core.Models.Blocks
+@{
+    var root = Umbraco.ContentAtRoot().First();
+    var title = root.Value("siteTitle");
+    var siteCopy = root.Value("siteCopy");
+    var showBreadcrumbs = Model.Value<bool>("showBreadcrumbs");
+    var newsletterInputText = root.Value("newsletterInputText");
+    var newsletterThankyouText = root.Value("newsletterThankyouText");
+    var footerLinks = root.Value<IEnumerable<BlockGridItem>>("footerLinks");
+    var footerInfoBox = root.Value<IEnumerable<BlockGridItem>>("footerInfoBox");
+}
+<section class="footer" id="footer">
+    <a href="#page-top" class="go_up btn_arrow white" aria-label="חזור לראש העמוד"><span
+            class="icon icon-arrow_up"></span></a>
+    <div class="top">
+        <div class="innerpage">
+            <div class="row">
+                <form class="newsletter_box search-box font_m" id="newsletter_box">
+                    <div class="step_one" data-placeholder="@newsletterInputText">
+                        <input type="text" placeholder="@newsletterInputText" aria-label="@newsletterInputText"
+                            class="place-black" />
+                        <button type="submit" class="submit btn_arrow" disabled><span
+                                class="icon icon-arrow_left"></span></button>
+                    </div>
+                    <div class="step_two">
+                        @newsletterThankyouText
+                    </div>
+                </form>
+                @{
+                    if (showBreadcrumbs)
+                    {
+                        <ul class="breadcrumbs font_s clear">
+                            <li><a href="#" aria-label="חזור לדף הבית"><span class="icon icon-home"></span></a></li>
+                            <li><a href="#">אודות</a></li>
+                            <li>מי אנחנו</li>
+                        </ul>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="innerpage">
+        <div class="row">
+            <div class="middle font_xs clear">
+                @if (footerInfoBox != null)
+                {
+                    <div class="col">
+                        <ul class="info_box font_s">
+                            @foreach (var item in footerInfoBox)
+                            {
+                                var ibIcon = item.Content.Value("icon");
+                                var ibLabel = item.Content.Value("label");
+                                var ibdescription = item.Content.Value("description");
+                                <li>
+                                    <span class="icon icon-@ibIcon"></span>
+                                    <div class="label">@ibLabel</div>
+                                    <div class="desc font_r">@ibdescription</div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                @if (footerLinks != null)
+                {
+                    foreach (var item in footerLinks)
+                    {
+                        var subItems = item.Content.Value<IEnumerable<BlockListItem>>("menuSubItems");
+                        var hasItems = (subItems?.Count() ?? 0) > 0;
+
+                        <div class="col @(hasItems ? "col_collapse": "")">
+                            <h5 class="col_title font_r">@item.Content.Value("menuItemName")</h5>
+                            @if (hasItems)
+                            {
+                                <div class="sublinks">
+                                    <ul class="links">
+                                        @foreach (var subitem in subItems)
+                                        {
+                                            var link = subitem.Content.Value("menuItemLink");
+                                            var name = subitem.Content.Value("menuItemName");
+                                            var highlight = subitem.Content.Value<bool>("menuItemHighlight");
+                                            if (highlight)
+                                            {
+                                                <li><a href="@link" class="highlight"><span>@name</span></a></li>
+                                            }
+                                            else
+                                            {
+                                                <li><a href="@link">@name</a></li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+            <div class="bottom font_xs clear">
+                <a href="#" title="@title" class="logo"></a>
+
+                <div class="copyright clear">
+                    <div>@siteCopy</div>
+                    <div class="d-ltr">Website by: <a href="https://www.tvuna.co.il" aria-label="Tvuna"
+                            class="logo_tvuna"></a></div>
+                </div>
+
+                <ul class="share_bar clear">
+                    <li><a href="#" aria-label="Facebook"><span class="icon icon-facebook"></span></a></li>
+                    <li><a href="#" aria-label="Linkedin"><span class="icon icon-linkedin"></span></a></li>
+                    <li><a href="#" aria-label="YouTube"><span class="icon icon-youtube"></span></a></li>
+                    <li class="link_text font_s"><a href="#">פרטיות</a></li>
+                    <li class="link_text font_s"><a href="#">תנאי האתר</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,18 @@
+@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
+
+@{
+    var image = Model.Content.Value<Umbraco.Cms.Core.Models.MediaWithCrops>("image");
+    var title = Model.Content.Value("title");
+    var description = Model.Content.Value("description");
+    var link = Model.Content.Value("link");
+}
+<div class="in">
+    <div class="bg">
+        <div class="cover" style="background-image: url(@image?.MediaUrl());"></div>
+    </div>
+    <div class="bottom">
+        <h3 class="title title-5">@title</h3>
+        <div class="desc">@description</div>
+    </div>
+</div>
