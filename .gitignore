@@ -474,6 +474,7 @@ appsettings-schema.*.json
 
 # Log files
 /umbraco/Logs/
+umbraco/Logs/
 
 # Media files
 /wwwroot/media/
