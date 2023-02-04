@@ -1,5 +1,6 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
 @using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models
 @{
     var root = Umbraco.ContentAtRoot().First();
     var title = root.Value("siteTitle");
@@ -36,16 +37,16 @@
                                                     <ul>
                                                         @foreach (var subitem in subItems)
                                                         {
-                                                            var link = subitem.Content.Value("menuItemLink");
+                                                            var link = subitem.Content.Value<Link>("menuItemLink");
                                                             var name = subitem.Content.Value("menuItemName");
                                                             var highlight = subitem.Content.Value<bool>("menuItemHighlight");
                                                             if (highlight)
                                                             {
-                                                                <li><a href="@link" class="highlight"><span>@name</span></a></li>
+                                                                <li><a href="@link.Url" class="highlight"><span>@name</span></a></li>
                                                             }
                                                             else
                                                             {
-                                                                <li><a href="@link">@name</a></li>
+                                                                <li><a href="@link.Url">@name</a></li>
                                                             }
                                                         }
                                                     </ul>
